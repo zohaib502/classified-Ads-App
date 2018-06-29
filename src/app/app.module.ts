@@ -8,7 +8,9 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import {FIREBASE_CONFIG} from './app.firebase.config';
 import {AngularFireAuthModule} from 'angularfire2/auth';
-
+import { DatabaseProvider } from '../providers/database/database';
+import { HttpModule } from '@angular/http';
+import { SQLite } from '@ionic-native/sqlite';
 @NgModule({
   declarations: [
     MyApp,
@@ -16,6 +18,7 @@ import {AngularFireAuthModule} from 'angularfire2/auth';
   ],
   imports: [
     BrowserModule,
+    HttpModule,
     IonicModule.forRoot(MyApp),
     AngularFireModule.initializeApp(FIREBASE_CONFIG),
     AngularFireAuthModule,
@@ -28,7 +31,9 @@ import {AngularFireAuthModule} from 'angularfire2/auth';
   providers: [
     StatusBar,
     SplashScreen,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}
+    {provide: ErrorHandler, useClass: IonicErrorHandler},
+    DatabaseProvider,
+    SQLite
   ]
 })
 export class AppModule {}

@@ -1,8 +1,9 @@
 import { Component, ViewChild } from '@angular/core';
-import { Nav, Platform, Events } from 'ionic-angular';
+import { Nav, Platform, Events, AlertController  } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Storage } from '@ionic/storage';
+import { DatabaseProvider } from '../providers/database/database';
 
 @Component({
   templateUrl: 'app.html'
@@ -15,7 +16,7 @@ export class MyApp {
 
   pages: Array<{title: string, component: any}>;
 
-  constructor(private storage: Storage,public platform: Platform,public events: Events, public statusBar: StatusBar, public splashScreen: SplashScreen) {
+  constructor(private alertCtrl: AlertController,public database: DatabaseProvider,private storage: Storage,public platform: Platform,public events: Events, public statusBar: StatusBar, public splashScreen: SplashScreen) {
     this.initializeApp();
     var SignOut = { title: 'SignOut', component: "LoginPage"};
     var Register = { title: 'Register', component: "RegisterPage"};
@@ -43,9 +44,22 @@ export class MyApp {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
       this.statusBar.styleDefault();
+       this.database.initDB().then(() => {
+       this.presentAlert("Database Created Successfully");
+        }).catch((err)=>{
+          this.presentAlert("Error Creating Database:"+JSON.stringify(err));
+        });
       this.splashScreen.hide();
      
     });
+  }
+  presentAlert(msg) {
+    let alert = this.alertCtrl.create({
+      title: 'Database Alert',
+      subTitle: msg,
+      buttons: ['Dismiss']
+    });
+    alert.present();
   }
 
 
